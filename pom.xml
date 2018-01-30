@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.asaf</groupId>
+    <artifactId>fast-subtitles-downloader</artifactId>
+    <version>1.3</version>
+    <properties>
+
+        <maven.compiler.plugin>3.7.0</maven.compiler.plugin>
+        <maven.shade.plugin>3.1.0</maven.shade.plugin>
+
+
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>oss-sonatype</id>
+            <name>oss-sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+   <dependencies>
+       <!-- https://mvnrepository.com/artifact/com.github.wtekiela/opensub4j -->
+       <dependency>
+           <groupId>com.github.wtekiela</groupId>
+           <artifactId>opensub4j</artifactId>
+           <version>0.2.2-SNAPSHOT</version>
+
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+       <dependency>
+           <groupId>org.apache.commons</groupId>
+           <artifactId>commons-lang3</artifactId>
+           <version>3.7</version>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+       <dependency>
+           <groupId>commons-io</groupId>
+           <artifactId>commons-io</artifactId>
+           <version>2.6</version>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/org.apache.xmlrpc/xmlrpc -->
+       <!-- https://mvnrepository.com/artifact/org.apache.xmlrpc/xmlrpc-client -->
+       <dependency>
+           <groupId>org.apache.xmlrpc</groupId>
+           <artifactId>xmlrpc-client</artifactId>
+           <version>3.1.3</version>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+       <dependency>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-api</artifactId>
+           <version>1.7.25</version>
+       </dependency>
+
+       <dependency>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-simple</artifactId>
+           <version>1.7.25</version>
+       </dependency>
+
+       <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
+       <dependency>
+           <groupId>commons-cli</groupId>
+           <artifactId>commons-cli</artifactId>
+           <version>1.4</version>
+       </dependency>
+
+
+
+
+
+
+
+   </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven.shade.plugin}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+
+                            <minimizeJar>false</minimizeJar>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                            <dependencyReducedPomLocation>
+                                ${java.io.tmpdir}/dependency-reduced-pom.xml
+                            </dependencyReducedPomLocation>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.acme.coyote</pattern>
+                                    <shadedPattern>hidden.coyote</shadedPattern>
+                                </relocation>
+                            </relocations>
+
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.asaf.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+
+            </resource>
+        </resources>
+    </build>
+
+</project>
