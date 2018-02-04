@@ -6,7 +6,7 @@
 
     <groupId>com.asaf</groupId>
     <artifactId>fast-subtitles-downloader</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
     <properties>
 
         <maven.compiler.plugin>3.7.0</maven.compiler.plugin>

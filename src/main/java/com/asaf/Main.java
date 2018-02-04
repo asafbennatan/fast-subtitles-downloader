@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
@@ -127,6 +128,7 @@ public class Main {
                         usedForSearch = videoInfo;
                         if (videoInfo != null) {
                             List<SubtitleInfo> subtitles = osClient.searchSubtitles(subLang, videoInfo.getName(), videoInfo.getSeason(), videoInfo.getEpisode());
+                            subtitles.sort(Comparator.comparingDouble(SubtitleInfo::getScore).reversed());
                             info = !subtitles.isEmpty() ? subtitles.get(0) : null;
                             if (info != null) {
                                 logger.info("Selected Subtitles for " + file1 + " By Name had "+subtitles.size() +" option"+(subtitles.size()>1?"s":""));
