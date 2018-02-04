@@ -26,10 +26,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -40,6 +38,7 @@ public class Main {
     private static final String FORCE = "f";
     private static final String LOG = "log";
     private static final String RECURSIVE = "r";
+    private static final String MIN_SCORE = "m";
 
     private static Invocable parser;
     private static Logger logger;
@@ -49,6 +48,7 @@ public class Main {
 
         CommandLine line = null;
         Options options = getOptions();
+
         try {
             line = parseCommandLine(options, args);
 
@@ -79,10 +79,12 @@ public class Main {
         boolean byName = line.hasOption(BYNAME);
         boolean force = line.hasOption(FORCE);
         boolean rec=line.hasOption(RECURSIVE);
+        double minScore=Double.parseDouble(line.getOptionValue(MIN_SCORE,"0"));
 
         URL serverUrl = new URL("https", "api.opensubtitles.org", 443, "/xml-rpc");
         OpenSubtitlesClient osClient = new OpenSubtitlesClientImpl(serverUrl);
-        String[] subLangs = line.getOptionValue(LANG, "eng").split(",");
+        String subLang = line.getOptionValue(LANG, "eng");
+        String[] subLangs = subLang.split(",");
         String clientLang = "en";
 
         osClient.login("asafbennatan", "nikoniko", clientLang, "TemporaryUserAgent");
@@ -120,15 +122,13 @@ public class Main {
             Object usedForSearch = null;
 
             SubtitleInfo info = null;
-            for (int i = 0; i < subLangs.length && info==null; i++) {
-                String subLang=subLangs[i];
                 try {
                     if (byName) {
                         VideoInfo videoInfo = parseVideoInfo(file1.getName());
                         usedForSearch = videoInfo;
                         if (videoInfo != null) {
                             List<SubtitleInfo> subtitles = osClient.searchSubtitles(subLang, videoInfo.getName(), videoInfo.getSeason(), videoInfo.getEpisode());
-                            subtitles.sort(Comparator.comparingDouble(SubtitleInfo::getScore).reversed());
+                            subtitles=subtitles.parallelStream().filter(f->f.getScore() >= minScore).sorted(Comparator.comparingInt((SubtitleInfo o) -> getLangRating(o.getLanguage(),subLangs)).thenComparing(Comparator.comparingDouble(SubtitleInfo::getScore).reversed())).collect(Collectors.toList());
                             info = !subtitles.isEmpty() ? subtitles.get(0) : null;
                             if (info != null) {
                                 logger.info("Selected Subtitles for " + file1 + " By Name had "+subtitles.size() +" option"+(subtitles.size()>1?"s":""));
@@ -166,7 +166,7 @@ public class Main {
                     logger.error("could not get subtitles for " + file1.getName() + ", " + usedForSearch + " failed listing", e);
 
                 }
-            }
+
 
             if (info != null) {
                 List<SubtitleFile> subtitleFiles = null;
@@ -195,6 +195,16 @@ public class Main {
 
         }
 
+
+    }
+
+    private static int getLangRating(String language, String[] subLangs) {
+        for (int i = 0; i < subLangs.length; i++) {
+            if(language.toLowerCase().startsWith(subLangs[i])){
+                return i;
+            }
+        }
+        return Integer.MAX_VALUE;
 
     }
 
@@ -231,7 +241,9 @@ public class Main {
                         "will download heb if possible and otherwise will fallback to eng")
                 .addOption(FORCE, "use for forcing download subtitle even if the file exists")
                 .addOption(LOG, true, "use for creating a log file")
-                .addOption(RECURSIVE, "use for recursively iterating over directories");
+                .addOption(RECURSIVE, "use for recursively iterating over directories")
+                .addOption(MIN_SCORE,true, "use for removing subtitles under score");
+
 
 
     }
