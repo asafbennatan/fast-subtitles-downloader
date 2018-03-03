@@ -20,6 +20,11 @@ usage: fast-subtitles-downloader
  
  -r           use for recursively iterating over directories
  
+ example:
+ 
+ java -jar fast-subtitles-downloader-1.5.jar -i "C:\Users\Asaf\Downloads\someMovieFolder\" -l heb,eng -f -m 5
+ will download subtitles for all video files in C:\Users\Asaf\Downloads\someMovieFolder\ folder , will prefer hebrew lang over english if subtitle rating is over 5
+ 
  
  credits:
  
