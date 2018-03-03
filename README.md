@@ -9,9 +9,7 @@ usage: fast-subtitles-downloader
  -i <arg>     use given file/folder for subtitles download
  
  -l <arg>     comma delimited list of subtitles langauge for example:
- 
               heb,eng will download heb if possible and otherwise will
-              
               fallback to eng
               
  -log <arg>   use for creating a log file
