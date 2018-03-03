@@ -42,6 +42,8 @@ public class Main {
 
     private static Invocable parser;
     private static Logger logger;
+    private static String VERSION;
+    private static Properties properties=new Properties();
 
 
     public static void main(String[] args) throws IOException, XmlRpcException, ScriptException {
@@ -80,6 +82,10 @@ public class Main {
         boolean force = line.hasOption(FORCE);
         boolean rec=line.hasOption(RECURSIVE);
         double minScore=Double.parseDouble(line.getOptionValue(MIN_SCORE,"0"));
+        properties.load(Main.class.getClassLoader().getResourceAsStream("props.properties"));
+        VERSION=properties.getProperty("version","UNKNOWN");
+
+        logger.info("STARTED FAST SUBTITLES DOWNLOADER "+VERSION);
 
         URL serverUrl = new URL("https", "api.opensubtitles.org", 443, "/xml-rpc");
         OpenSubtitlesClient osClient = new OpenSubtitlesClientImpl(serverUrl);
@@ -120,7 +126,7 @@ public class Main {
                 continue;
             }
             Object usedForSearch = null;
-
+            int numberOfSubs=0;
             SubtitleInfo info = null;
                 try {
                     if (byName) {
@@ -128,23 +134,21 @@ public class Main {
                         usedForSearch = videoInfo;
                         if (videoInfo != null) {
                             List<SubtitleInfo> subtitles = osClient.searchSubtitles(subLang, videoInfo.getName(), videoInfo.getSeason(), videoInfo.getEpisode());
+                            numberOfSubs=subtitles.size();
                             subtitles=subtitles.parallelStream().filter(f->f.getScore() >= minScore).sorted(Comparator.comparingInt((SubtitleInfo o) -> getLangRating(o.getLanguage(),subLangs)).thenComparing(Comparator.comparingDouble(SubtitleInfo::getScore).reversed())).collect(Collectors.toList());
                             info = !subtitles.isEmpty() ? subtitles.get(0) : null;
-                            if (info != null) {
-                                logger.info("Selected Subtitles for " + file1 + " By Name had "+subtitles.size() +" option"+(subtitles.size()>1?"s":""));
 
-                            }
                         }
 
                     }
                     if (info == null) {
                         List<SubtitleInfo> subtitles = osClient.searchSubtitles(subLang, file1);
+                        numberOfSubs=subtitles.size();
+                        subtitles=subtitles.parallelStream().filter(f->f.getScore() >= minScore).sorted(Comparator.comparingInt((SubtitleInfo o) -> getLangRating(o.getLanguage(),subLangs)).thenComparing(Comparator.comparingDouble(SubtitleInfo::getScore).reversed())).collect(Collectors.toList());
+
                         info = subtitles.isEmpty() ? null : subtitles.get(0);
                         usedForSearch = "Hash";
-                        if (info != null) {
-                            logger.info("Selected Subtitles for " + file1 + " By Hash had "+subtitles.size() +" option"+(subtitles.size()>1?"s":""));
 
-                        }
 
                     }
                     if (!byName && info == null) {
@@ -152,11 +156,10 @@ public class Main {
                         usedForSearch = videoInfo;
                         if (videoInfo != null) {
                             List<SubtitleInfo> subtitles = osClient.searchSubtitles(subLang, videoInfo.getName(), videoInfo.getSeason(), videoInfo.getEpisode());
+                            numberOfSubs=subtitles.size();
+                            subtitles=subtitles.parallelStream().filter(f->f.getScore() >= minScore).sorted(Comparator.comparingInt((SubtitleInfo o) -> getLangRating(o.getLanguage(),subLangs)).thenComparing(Comparator.comparingDouble(SubtitleInfo::getScore).reversed())).collect(Collectors.toList());
                             info = !subtitles.isEmpty() ? subtitles.get(0) : null;
-                            if (info != null) {
-                                logger.info("Selected Subtitles for " + file1 + " By Name had "+subtitles.size() +" option"+(subtitles.size()>1?"s":""));
 
-                            }
                         }
 
                     }
@@ -169,6 +172,9 @@ public class Main {
 
 
             if (info != null) {
+                    logger.info("Selected Subtitles for " + file1 + " "+usedForSearch+ ",selected: "+info+" had "+numberOfSubs +" option"+(numberOfSubs>1?"s":""));
+
+
                 List<SubtitleFile> subtitleFiles = null;
                 try {
                     long start=System.currentTimeMillis();
@@ -197,6 +203,8 @@ public class Main {
 
 
     }
+
+
 
     private static int getLangRating(String language, String[] subLangs) {
         for (int i = 0; i < subLangs.length; i++) {

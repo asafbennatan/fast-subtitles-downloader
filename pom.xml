@@ -6,7 +6,7 @@
 
     <groupId>com.asaf</groupId>
     <artifactId>fast-subtitles-downloader</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
     <properties>
 
         <maven.compiler.plugin>3.7.0</maven.compiler.plugin>
@@ -136,6 +136,11 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+
+            </resource>
+            <resource>
+                <directory>src/main/resources/filtered</directory>
+                <filtering>true</filtering>
 
             </resource>
         </resources>
