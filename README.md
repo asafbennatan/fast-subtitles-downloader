@@ -24,7 +24,9 @@ usage: fast-subtitles-downloader
  credits:
  
  apache commons, apache xml-rpc ,
+
  port of opensub4j: https://github.com/wtekiela/opensub4j
+ 
  port of episode-parser: https://github.com/tregusti/episode-parser
  
  
