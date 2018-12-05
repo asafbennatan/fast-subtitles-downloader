@@ -93,7 +93,7 @@ public class Main {
         String[] subLangs = subLang.split(",");
         String clientLang = "en";
 
-        osClient.login("asafbennatan", "nikoniko", clientLang, "TemporaryUserAgent");
+        osClient.login("username", "password", clientLang, "TemporaryUserAgent");
         Collection<File> files;
         if (file.isDirectory()) {
             files=FileUtils.listFiles(file,new FileFileFilter(){
