@@ -2,12 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="fast-subtitles-downloader" target="1.8" />
+      <module name="fast-subtitles-downloader" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="fast-subtitles-downloader" options="-proc:none" />
+      <module name="fast-subtitles-downloader" options="-parameters -proc:none" />
     </option>
   </component>
 </project>

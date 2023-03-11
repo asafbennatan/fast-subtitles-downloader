@@ -2,10 +2,10 @@ package com.asaf;
 
 public class VideoInfo {
     private String name;
-    private String season;
-    private String episode;
+    private Integer season;
+    private Integer episode;
 
-    public VideoInfo(String name, String season, String episode) {
+    public VideoInfo(String name, Integer season, Integer episode) {
         this.name = name;
         this.season = season;
         this.episode = episode;
@@ -20,20 +20,20 @@ public class VideoInfo {
         return this;
     }
 
-    public String getSeason() {
+    public Integer getSeason() {
         return season;
     }
 
-    public VideoInfo setSeason(String season) {
+    public VideoInfo setSeason(Integer season) {
         this.season = season;
         return this;
     }
 
-    public String getEpisode() {
+    public Integer getEpisode() {
         return episode;
     }
 
-    public VideoInfo setEpisode(String episode) {
+    public VideoInfo setEpisode(Integer episode) {
         this.episode = episode;
         return this;
     }
