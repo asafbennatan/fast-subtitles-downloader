@@ -60,7 +60,7 @@ episode, hint episode in case filenames do not follow known format
 
 --help or -h 
 help for download
-[Optional]```
+[Optional]
 
 
 
