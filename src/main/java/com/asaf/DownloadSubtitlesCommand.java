@@ -5,6 +5,9 @@ import com.asaf.requests.LoginRequest;
 import com.asaf.response.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,26 +23,29 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.*;
 
 @ShellComponent
 public class DownloadSubtitlesCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadSubtitlesCommand.class);
+    public static final VideoFileFilter VIDEO_FILE_FILTER = new VideoFileFilter();
 
     @ShellMethod(value = "download subtitles", key = "download")
     public void download(@ShellOption(value = "-n", help = "search subtitles by name first") boolean byName,
                          @ShellOption(value = "-i", help = "input file or directory") File file,
-                         @ShellOption(value = "-l", help = "language") String[] langs,
+                         @ShellOption(value = "-l", help = "language, comma delimited language codes") String[] langs,
                          @ShellOption(value = "-f", help = "force download") boolean force,
-                         @ShellOption(value = "-r", help = "recursive") boolean recursive,
-                         @ShellOption(value = "-m", help = "minimum score", defaultValue = "0") int minScore,
-                         @ShellOption(value = "-t", help = "token") String token,
-                         @ShellOption(value = "-u", help = "username") String username,
-                         @ShellOption(value = "-p", help = "password") String password,
-                         @ShellOption(value = "--title", help = "title", defaultValue = ShellOption.NULL) String title,
-                         @ShellOption(value = "--season", help = "season", defaultValue = ShellOption.NULL) Integer season,
-                         @ShellOption(value = "--episode", help = "episode", defaultValue = ShellOption.NULL) Integer episode) {
+                         @ShellOption(value = "-r", help = "recursive , search recursively on the file provided by -i") boolean recursive,
+                         @ShellOption(value = "-m", help = "minimum score, filters results by minimum user's score", defaultValue = "0") int minScore,
+                         @ShellOption(value = "-t", help = "token, API token obtained from opensubtitles.com") String token,
+                         @ShellOption(value = "-u", help = "username, opensubtitles.com username") String username,
+                         @ShellOption(value = "-p", help = "password, opensubtitles.com username") String password,
+                         @ShellOption(value = "--title", help = "title, hint title in case filenames do not follow known format", defaultValue = ShellOption.NULL) String title,
+                         @ShellOption(value = "--season", help = "season, hint season in case filenames do not follow known format", defaultValue = ShellOption.NULL) Integer season,
+                         @ShellOption(value = "--episode", help = "episode, hint episode in case filenames do not follow known format", defaultValue = ShellOption.NULL) Integer episode) {
 
         logger.info("searching subtitles for " + file + " with languages " + Arrays.toString(langs) + " and min score " + minScore);
 
@@ -122,7 +128,10 @@ public class DownloadSubtitlesCommand {
 
             SearchResponse<Subtitle> body = response.getBody();
             List<Subtitle> subtitles = body.getData();
-            return subtitles.parallelStream().filter(f -> f.getAttributes().getRatings() >= minScore && f.getAttributes().getFiles() != null && f.getAttributes().getFiles().length > 0).sorted(Comparator.comparingInt((Subtitle o) -> getLangRating(o.getAttributes().getLanguage(), langs)).thenComparing(Comparator.comparingDouble((Subtitle f) -> f.getAttributes().getRatings()).reversed())).findFirst().map(f -> f.setQueryType(byName ? QueryType.NAME : QueryType.HASH).setTotalResults(body.getTotal_count()));
+            return subtitles.parallelStream()
+                    .filter(f -> f.getAttributes().getRatings() >= minScore && f.getAttributes().getFiles() != null && f.getAttributes().getFiles().length > 0)
+                    .min(Comparator.comparingInt((Subtitle o) -> getLangRating(o.getAttributes().getLanguage(), langs)).thenComparing(Comparator.comparingDouble((Subtitle f) -> f.getAttributes().getRatings()).reversed()))
+                    .map(f -> f.setQueryType(byName ? QueryType.NAME : QueryType.HASH).setTotalResults(body.getTotal_count()));
         } catch (IOException e) {
             logger.error("Error searching subtitles for " + video.getName(), e);
             return Optional.empty();
@@ -155,11 +164,23 @@ public class DownloadSubtitlesCommand {
     }
 
     private static List<File> getVideoFiles(File file, boolean recursive) {
-        //lists all video files in the directory recursively , if file is not directory returns the file itself
+        //lists all video files in the directory recursively , if file is not directory returns the file itself using IOFileFilter
         if (file.isDirectory()) {
-            return new ArrayList<>(FileUtils.listFiles(file, new String[]{"mkv", "mp4", "avi"}, recursive));
+            return new ArrayList<>(FileUtils.listFiles(file, VIDEO_FILE_FILTER, recursive ? TrueFileFilter.INSTANCE : FalseFileFilter.INSTANCE));
         }
+
+
         return Collections.singletonList(file);
+    }
+
+    private static boolean isVideoFile(File file) {
+        try {
+            String mimeType = Files.probeContentType(file.toPath());
+            return mimeType != null && mimeType.startsWith("video");
+        }
+        catch (IOException ignored) {
+            return false;
+        }
     }
 
 
@@ -194,4 +215,15 @@ public class DownloadSubtitlesCommand {
 
     }
 
+    private static class VideoFileFilter implements IOFileFilter {
+        @Override
+        public boolean accept(File file) {
+            return file.isDirectory() || isVideoFile(file);
+        }
+
+        @Override
+        public boolean accept(File file, String s) {
+            return accept(new File(file, s));
+        }
+    }
 }
