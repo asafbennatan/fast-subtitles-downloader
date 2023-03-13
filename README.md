@@ -1,4 +1,4 @@
-# fast-subtitles-downloader
+# Fast Subtitles Downloader
 command line options for fast downloading subtitles using open subtitles api (opensubtitles.com)
 
 
@@ -7,7 +7,8 @@ download - download subtitles
 
 #### SYNOPSIS
 download -n boolean [-i File] [-l String[]] -f boolean -r boolean -m int [-t String] [-u String] [-p String] --title String --season Integer --episode Integer --help
-
+#### API Key
+You can obtain an api key for your application in the [API consumers](https://www.opensubtitles.com/consumers) section of your opensubtitles.com profile. Create a consumer object that will contain the required api key.
 #### OPTIONS
 ```
 -n boolean
@@ -60,7 +61,7 @@ episode, hint episode in case filenames do not follow known format
 
 --help or -h 
 help for download
-[Optional]```
+[Optional]
 
 
 
