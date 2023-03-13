@@ -2,14 +2,6 @@ package com.asaf.response;
 
 public class RelatedLink {
 
-    /**
-     *  {
-     *                         "label": "All subtitles for Tv Show The Mindy Project",
-     *                         "url": "https://www.opensubtitles.com/en/features/redirect/12415",
-     *                         "img_url": "https://s9.opensubtitles.com/features/9/9/8/41899.jpg"
-     *                     }
-     */
-
     private String label;
     private String url;
     private String img_url;

@@ -3,64 +3,7 @@ package com.asaf.response;
 import java.time.OffsetDateTime;
 
 public class SubtitleAttributes {
-    /**
-     * "subtitle_id": "1652594",
-     *                 "language": "en",
-     *                 "download_count": 8196,
-     *                 "new_download_count": 27,
-     *                 "hearing_impaired": false,
-     *                 "hd": true,
-     *                 "fps": 0.0,
-     *                 "votes": 0,
-     *                 "ratings": 0.0,
-     *                 "from_trusted": false,
-     *                 "foreign_parts_only": false,
-     *                 "upload_date": "2013-08-15T15:44:52Z",
-     *                 "ai_translated": false,
-     *                 "machine_translated": false,
-     *                 "release": "The.Mindy.Project.S01E01.720p.HDTV.ReEnc-Max",
-     *                 "comments": "",
-     *                 "legacy_subtitle_id": 5135288,
-     *                 "uploader": {
-     *                     "uploader_id": 3282,
-     *                     "name": "os-auto",
-     *                     "rank": "Application Developers"
-     *                 },
-     *                 "feature_details": {
-     *                     "feature_id": 41899,
-     *                     "feature_type": "Episode",
-     *                     "year": 2012,
-     *                     "title": "Pilot",
-     *                     "movie_name": "The Mindy Project - S01E01  \"The Mindy Project\" Pilot",
-     *                     "imdb_id": 2157844,
-     *                     "tmdb_id": 895782,
-     *                     "season_number": 1,
-     *                     "episode_number": 1,
-     *                     "parent_imdb_id": 2211129,
-     *                     "parent_title": "The Mindy Project",
-     *                     "parent_tmdb_id": 44857,
-     *                     "parent_feature_id": 12415
-     *                 },
-     *                 "url": "https://www.opensubtitles.com/en/subtitles/legacy/5135288",
-     *                 "related_links": [
-     *                     {
-     *                         "label": "All subtitles for Tv Show The Mindy Project",
-     *                         "url": "https://www.opensubtitles.com/en/features/redirect/12415",
-     *                         "img_url": "https://s9.opensubtitles.com/features/9/9/8/41899.jpg"
-     *                     },
-     *                     {
-     *                         "label": "All subtitles for Episode Pilot",
-     *                         "url": "https://www.opensubtitles.com/en/features/redirect/41899"
-     *                     }
-     *                 ],
-     *                 "files": [
-     *                     {
-     *                         "file_id": 1741449,
-     *                         "cd_number": 1,
-     *                         "file_name": "The.Mindy.Project.S01E01.720p.HDTV.ReEnc-Max-eng"
-     *                     }
-     *                 ]
-     */
+
 
     private String subtitle_id;
     private String language;

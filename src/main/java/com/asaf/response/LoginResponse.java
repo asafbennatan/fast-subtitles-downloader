@@ -1,21 +1,7 @@
 package com.asaf.response;
 
 public class LoginResponse {
-    /**
-     * {
-     *   "user": {
-     *     "allowed_downloads": 100,
-     *     "allowed_translations": 5,
-     *     "level": "Sub leecher",
-     *     "user_id": 66,
-     *     "ext_installed": false,
-     *     "vip": false
-     *   },
-     *   "base_url": "api.opensubtitles.com",
-     *   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEOU5aaWUyVjhWOU1hTnJVZWVvcEEwWUNoWEt6Wkx3NiIsImV4cCI6MTYwNDM1ODAwMH0.sMibjAFnkcs-HJ4zhdCwBeGrZ_UvzMbgl5NxYV2uALM",
-     *   "status": 200
-     * }
-     */
+
     private User user;
     private String base_url;
     private String token;

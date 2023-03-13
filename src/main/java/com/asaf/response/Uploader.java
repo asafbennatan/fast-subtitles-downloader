@@ -1,13 +1,7 @@
 package com.asaf.response;
 
 public class Uploader {
-    /**
-     * {
-     *                     "uploader_id": 3282,
-     *                     "name": "os-auto",
-     *                     "rank": "Application Developers"
-     *                 }
-     */
+
     private int uploader_id;
     private String name;
     private String rank;

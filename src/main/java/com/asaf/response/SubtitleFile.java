@@ -1,13 +1,7 @@
 package com.asaf.response;
 
 public class SubtitleFile {
-    /**
-     *  {
-     *                         "file_id": 1741449,
-     *                         "cd_number": 1,
-     *                         "file_name": "The.Mindy.Project.S01E01.720p.HDTV.ReEnc-Max-eng"
-     *                     }
-     */
+
 
     private int file_id;
     private int cd_number;

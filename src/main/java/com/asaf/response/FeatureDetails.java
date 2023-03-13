@@ -1,23 +1,6 @@
 package com.asaf.response;
 
 public class FeatureDetails {
-    /**
-     * {
-     *                     "feature_id": 41899,
-     *                     "feature_type": "Episode",
-     *                     "year": 2012,
-     *                     "title": "Pilot",
-     *                     "movie_name": "The Mindy Project - S01E01  \"The Mindy Project\" Pilot",
-     *                     "imdb_id": 2157844,
-     *                     "tmdb_id": 895782,
-     *                     "season_number": 1,
-     *                     "episode_number": 1,
-     *                     "parent_imdb_id": 2211129,
-     *                     "parent_title": "The Mindy Project",
-     *                     "parent_tmdb_id": 44857,
-     *                     "parent_feature_id": 12415
-     *                 }
-     */
 
     private int feature_id;
     private String feature_type;

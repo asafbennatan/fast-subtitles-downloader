@@ -1,16 +1,7 @@
 package com.asaf.response;
 
 public class User {
-    /**
-     * {
-     *           "allowed_downloads": 100,
-     *           "allowed_translations": 5,
-     *           "level": "Sub leecher",
-     *           "user_id": 66,
-     *           "ext_installed": false,
-     *           "vip": false
-     *         }
-     */
+
     private int allowed_downloads;
     private int allowed_translations;
     private String level;

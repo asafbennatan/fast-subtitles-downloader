@@ -3,33 +3,7 @@ package com.asaf.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class GussItResponse {
-    /**
-     * {
-     *   "title": [
-     *     "The Mindy Project",
-     *     "MIXED"
-     *   ],
-     *   "season": [
-     *     1,
-     *     2,
-     *     3,
-     *     4,
-     *     5,
-     *     6
-     *   ],
-     *   "screen_size": "1080p",
-     *   "video_codec": "H.265",
-     *   "audio_channels": "5.1",
-     *   "release_group": "5.2-CPT",
-     *   "episode": [
-     *     1,
-     *     2
-     *   ],
-     *   "container": "mkv",
-     *   "mimetype": "video/x-matroska",
-     *   "type": "episode"
-     * }
-     */
+
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private String[] title;
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
